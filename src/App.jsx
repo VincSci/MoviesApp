@@ -55,7 +55,7 @@ function App() {
 
   return (
     <>
-      <h1>Movies App</h1>
+      <h1 className="text-3xl font-bold underline">Movies App</h1>
       <form onSubmit={(e) => {
         e.preventDefault();
         fetchMoviesSearch();
