@@ -49,11 +49,6 @@ function App() {
     }
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetchMoviesSearch();
-  }
-
   useEffect(() => {
     fetchPopularMovies();
   }, [query] )
@@ -61,7 +56,10 @@ function App() {
   return (
     <>
       <h1>Movies App</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        fetchMoviesSearch();
+      }}>
         <input type="text" onChange={e => setQuery(e.target.value)} />
         <input type="submit" />
       </form>
@@ -73,6 +71,7 @@ function App() {
             <h2>{movie.title}</h2>
             <img src={`https://image.tmdb.org/t/p/w200/${movie.poster_path}`} />
             <p>Note : {movie.vote_average}/10</p>
+            <p>{movie.overview}</p>
           </div>
         )
       })}
