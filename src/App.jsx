@@ -3,19 +3,37 @@ import './App.css';
 import axios from 'axios';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
-const BASE_URL = "https://api.themoviedb.org/3/search";
+const BASE_URL = "https://api.themoviedb.org/3";
 
 function App() {
   const [movies, setMovies] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
   const [query, setQuery] = useState('');
 
-  const fetchMovies = async () => {
+  const fetchPopularMovies = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/movie?query=${query}`, {
+      const response = await axios.get(`${BASE_URL}/movie/popular`, {
+        params: {
+            api_key: API_KEY,
+        },
+    });
+      setMovies(response.data.results);
+    }
+    catch (err) {
+      console.log(err);
+      setError(err.message);
+    }
+    finally{
+      setLoading(false);
+    }
+  }
+
+  const fetchMoviesSearch = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${BASE_URL}/search/movie?query=${query}`, {
         params: {
             api_key: API_KEY,
         },
@@ -33,18 +51,18 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setQuery(search);
+    fetchMoviesSearch();
   }
 
   useEffect(() => {
-    fetchMovies();
+    fetchPopularMovies();
   }, [query] )
 
   return (
     <>
       <h1>Movies App</h1>
       <form onSubmit={handleSubmit}>
-        <input type="text" onChange={e => setSearch(e.target.value)} />
+        <input type="text" onChange={e => setQuery(e.target.value)} />
         <input type="submit" />
       </form>
       {error && <p>{error}</p>}
